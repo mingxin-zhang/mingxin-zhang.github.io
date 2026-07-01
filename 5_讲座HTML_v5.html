@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI时代下的经济统计</title>
+  <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:!0,processEnvironments:!0,packages:{'[+]':['boldsymbol']}},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:          #faf8f5;
+    --bg-card:     #ffffff;
+    --bg-accent:   #f4efe4;
+    --text:        #242323;
+    --text-mid:    #4a4845;
+    --text-light:  #787673;
+    --navy:        #1b2a4a;
+    --navy-light:  #2c4370;
+    --gold:        #b8862d;
+    --gold-light:  #d4a84f;
+    --gold-bg:     rgba(184,134,45,0.08);
+    --gold-border: rgba(184,134,45,0.18);
+    --border:      #e0dbd1;
+    --border-light:#efe9df;
+    --red:         #b83030;
+    --green:       #2a7d4f;
+    --shadow:      0 1px 3px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+    --shadow-lg:   0 4px 24px rgba(0,0,0,.06);
+    --radius:      6px;
+    --font-serif:  'Times New Roman', 'Songti SC', 'STSong', 'SimSun', serif;
+    --font-mono:   'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+    --w:           920px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:17px;scroll-behavior:smooth}
+  body{
+    font-family:var(--font-serif);
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* ---- TOC Sidebar ---- */
+  .toc{
+    position:fixed;left:max(16px,calc((100vw - var(--w)) / 2 - 260px));
+    top:50%;transform:translateY(-50%);
+    width:210px;max-height:75vh;overflow-y:auto;
+    padding:20px 0;
+    z-index:100;
+    opacity:1;
+    transition:opacity .3s;
+  }
+  @media(max-width:1480px){.toc{display:none}}
+  .toc-title{
+    font-size:.7rem;font-weight:700;letter-spacing:.12em;
+    color:var(--text-light);text-transform:uppercase;margin-bottom:12px;
+    padding-left:0;
+  }
+  .toc a{
+    display:block;font-size:.72rem;color:var(--text-light);
+    text-decoration:none;padding:5px 0;padding-left:0;
+    line-height:1.45;transition:color .2s;font-weight:400;
+    border-left:2px solid transparent;padding-left:10px;
+  }
+  .toc a:hover,.toc a.active{color:var(--navy);border-left-color:var(--gold)}
+  .toc .toc-l2{padding-left:22px;font-size:.68rem}
+  .toc .toc-l3{padding-left:34px;font-size:.64rem;color:var(--text-light)}
+
+  /* ---- Main Container ---- */
+  .main{
+    max-width:var(--w);margin:0 auto;padding:70px 40px 120px;
+  }
+
+  /* ---- Cover ---- */
+  .cover{
+    text-align:center;padding:100px 0 80px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:60px;
+  }
+  .cover-suptitle{
+    font-size:.82rem;letter-spacing:.14em;color:var(--gold);
+    text-transform:uppercase;font-weight:600;margin-bottom:10px;
+  }
+  .cover h1{
+    font-size:3rem;font-weight:800;color:var(--navy);
+    line-height:1.2;letter-spacing:-.01em;margin-bottom:16px;
+  }
+  .cover-subtitle{
+    font-size:1.05rem;color:var(--text-mid);
+    max-width:580px;margin:0 auto 28px;line-height:1.7;
+  }
+  .cover-bar{
+    width:48px;height:3px;background:var(--gold);margin:0 auto 20px;border-radius:2px;
+  }
+  .cover-tags{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  }
+  .cover-tag{
+    font-size:.72rem;padding:5px 14px;
+    border:1px solid var(--border);border-radius:20px;
+    color:var(--text-mid);font-weight:500;
+  }
+  .cover-tag--hl{border-color:var(--gold);color:var(--gold);font-weight:600}
+  .author-info{
+    margin-top:22px;font-size:.78rem;color:var(--text-light);
+    line-height:1.6;
+  }
+  .author-info p{margin-bottom:2px;color:var(--text-light)}
+  .author-info a{color:var(--navy-light);text-decoration:none}
+  .author-info a:hover{text-decoration:underline}
+
+  /* ---- Sections ---- */
+  section{margin-bottom:70px}
+  .sec-title{
+    font-size:2rem;font-weight:700;color:var(--navy);
+    line-height:1.3;margin-bottom:10px;
+  }
+  .sec-num{
+    font-size:.72rem;letter-spacing:.12em;color:var(--gold);
+    text-transform:uppercase;font-weight:600;margin-bottom:4px;
+  }
+  .sec-lead{
+    font-size:.95rem;color:var(--text-mid);font-style:italic;
+    border-left:3px solid var(--gold);
+    padding:10px 20px;margin:14px 0 28px;
+    background:var(--gold-bg);border-radius:0 var(--radius) var(--radius) 0;
+  }
+  .sec-bar{width:36px;height:3px;background:var(--gold);margin:12px 0 20px;border-radius:2px}
+
+  /* ---- Sub-sections ---- */
+  .h2-heading{
+    font-size:1.55rem;font-weight:700;color:var(--navy);
+    margin:44px 0 14px;padding-top:20px;
+    border-top:1px solid var(--border-light);
+  }
+  .h3-heading{
+    font-size:1.2rem;font-weight:700;color:var(--navy-light);
+    margin:32px 0 10px;
+  }
+  .h4-heading{
+    font-size:1rem;font-weight:700;color:var(--text);
+    margin:24px 0 8px;
+  }
+
+  /* ---- Paragraphs & Lists ---- */
+  p{margin-bottom:14px;color:var(--text-mid);line-height:1.85}
+  strong{color:var(--text);font-weight:600}
+  em{font-style:italic}
+  ul,ol{margin:10px 0 16px 1.6em}
+  li{margin-bottom:7px;color:var(--text-mid);line-height:1.8}
+  li::marker{color:var(--gold)}
+
+  /* ---- Blockquote ---- */
+  blockquote{
+    border-left:3px solid var(--gold);
+    padding:14px 22px;margin:18px 0;
+    background:var(--gold-bg);
+    border-radius:0 var(--radius) var(--radius) 0;
+    font-size:.92rem;color:var(--text-mid);
+  }
+  blockquote p{margin-bottom:6px}
+  blockquote strong{color:var(--navy)}
+
+  /* ---- Cards ---- */
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:22px 26px;margin:18px 0;
+    box-shadow:var(--shadow);
+  }
+  .card--gold{border-left:3px solid var(--gold)}
+  .card--navy{border-left:3px solid var(--navy)}
+  .card--warn{border-left:3px solid #b8862d}
+  .card-title{font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:8px}
+
+  /* ---- Tables ---- */
+  .table-wrap{overflow-x:auto;margin:20px 0}
+  table{
+    width:100%;border-collapse:collapse;font-size:.82rem;
+    border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  th{
+    background:var(--navy);color:#fff;font-weight:600;
+    padding:10px 16px;text-align:left;font-size:.74rem;
+    letter-spacing:.04em;
+  }
+  td{
+    padding:9px 16px;border-bottom:1px solid var(--border);
+    background:var(--bg-card);
+  }
+  tr:last-child td{border-bottom:none}
+  tr:nth-child(even) td{background:var(--bg-accent)}
+  .td-center{text-align:center}
+  .td-right{text-align:right}
+
+  /* ---- Code ---- */
+  code,pre{font-family:var(--font-mono);font-size:.78rem}
+  code{
+    background:var(--bg-accent);padding:2px 7px;border-radius:3px;
+    color:var(--navy-light);font-weight:500;
+  }
+  pre{
+    background:#1a1e24;color:#cdd6e0;padding:18px 22px;
+    border-radius:var(--radius);overflow-x:auto;line-height:1.7;
+    margin:16px 0;box-shadow:var(--shadow);
+  }
+
+  /* ---- Callouts ---- */
+  .callout{
+    background:var(--bg-accent);border-radius:var(--radius);
+    padding:16px 22px;margin:16px 0;font-size:.88rem;
+    line-height:1.7;color:var(--text-mid);
+  }
+  .callout--gold{
+    background:var(--gold-bg);border:1px solid var(--gold-border);
+    color:var(--text);
+  }
+  .callout--navy{
+    background:rgba(27,42,74,0.04);border:1px solid rgba(27,42,74,0.12);
+  }
+
+  /* ---- Images ---- */
+  .fig{
+    text-align:center;margin:36px 0;padding:20px 0;
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius);box-shadow:var(--shadow);
+  }
+  .fig img{
+    display:block;max-width:88%;max-height:520px;margin:0 auto;
+    object-fit:contain;
+  }
+  .fig-caption{
+    font-size:.76rem;color:var(--text-light);margin-top:12px;
+    font-style:italic;
+  }
+
+  /* ---- MathJax ---- */
+  mjx-container{margin:16px 0 !important;overflow-x:auto;overflow-y:hidden}
+  mjx-container[display="true"]{text-align:center}
+  .check-row{display:none}
+
+  /* ---- Tags/Badges ---- */
+  .badge{
+    display:inline-block;font-size:.7rem;font-weight:600;
+    padding:4px 10px;border-radius:3px;
+    background:var(--bg-accent);color:var(--text-mid);
+    border:1px solid var(--border);
+  }
+  .badge--gold{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-border)}
+  .badge--navy{background:rgba(27,42,74,0.06);color:var(--navy);border-color:rgba(27,42,74,0.15)}
+  .badge--green{background:rgba(42,125,79,0.06);color:var(--green);border-color:rgba(42,125,79,0.15)}
+  .badge--red{background:rgba(184,48,48,0.06);color:var(--red);border-color:rgba(184,48,48,0.15)}
+
+  /* ---- Exercise Block ---- */
+  .exercise{
+    background:var(--bg-card);border:2px solid var(--navy);
+    border-radius:var(--radius);padding:22px 28px;margin:22px 0;
+    box-shadow:var(--shadow);
+  }
+  .exercise-title{
+    font-weight:700;color:var(--navy);font-size:.9rem;
+    margin-bottom:10px;letter-spacing:.04em;
+  }
+
+  /* ---- Answer Reveal ---- */
+  .check-row{
+    display:flex;align-items:center;gap:10px;margin:10px 0;
+    font-size:.85rem;
+  }
+  .check-row .icon{font-size:1.1rem;width:24px;text-align:center}
+  .pass{color:var(--green)}.fail{color:var(--red)}
+
+  /* ---- Comparison Table (significance) ---- */
+  .cmp-table td:first-child{font-weight:600;color:var(--navy);width:120px}
+
+  /* ---- Resources ---- */
+  .res-card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:20px 24px;margin:12px 0;
+    box-shadow:var(--shadow);
+  }
+  .res-card h4{font-size:.9rem;color:var(--navy);margin-bottom:6px}
+  .res-card p{font-size:.82rem;color:var(--text-mid);margin-bottom:0}
+  .res-card a{color:var(--navy-light);text-decoration:none;font-weight:500}
+  .res-card a:hover{text-decoration:underline}
+
+  /* ---- Three-column Comparison ---- */
+  .cmp3{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;
+    margin:20px 0;
+  }
+  @media(max-width:820px){.cmp3{grid-template-columns:1fr}}
+  .cmp3-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:var(--radius);padding:20px 22px;
+    box-shadow:var(--shadow);
+  }
+  .cmp3-title{
+    font-weight:700;font-size:.9rem;color:var(--navy);
+    margin-bottom:8px;padding-bottom:8px;
+    border-bottom:2px solid var(--gold);
+  }
+
+  /* ---- Footer ---- */
+  .footer{
+    text-align:center;padding:40px 0 20px;
+    border-top:1px solid var(--border);
+    color:var(--text-light);font-size:.78rem;
+    margin-top:40px;
+  }
+
+  /* ---- Responsive ---- */
+  @media(max-width:720px){
+    .main{padding:30px 20px 80px}
+    .cover{padding:60px 0 50px}
+    .cover h1{font-size:2.2rem}
+    .sec-title{font-size:1.5rem}
+    .cmp3{grid-template-columns:1fr}
+  }
+
+  /* ---- Print ---- */
+  @media print{
+    .toc{display:none}
+    .main{max-width:100%;padding:0}
+    body{font-size:13px}
+    .fig{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== TOC ========== -->
+<nav class="toc" id="toc">
+  <div class="toc-title">目录</div>
+  <a href="#cover">封面</a>
+  <a href="#sec1">1. 经济统计的出发点与目的地</a>
+  <a href="#s1-1" class="toc-l2">1.1 区分相关与因果</a>
+  <a href="#s1-2" class="toc-l2">1.2 剑指因果的研究设计</a>
+  <a href="#s1-3" class="toc-l2">1.3 系数估计</a>
+  <a href="#s1-4" class="toc-l2">1.4 假设检验</a>
+  <a href="#sec2">2. 我们应该如何学习经济统计</a>
+  <a href="#s2-1" class="toc-l2">2.1 田园史诗时代</a>
+  <a href="#s2-2" class="toc-l2">2.2 LLM时代</a>
+  <a href="#s2-3" class="toc-l2">2.3 Agentic AI时代</a>
+  <a href="#sec3">3. Show me the code</a>
+  <a href="#s3-1" class="toc-l2">3.1 文献管理智能体</a>
+  <a href="#s3-2" class="toc-l2">3.2 数据清洗智能体</a>
+  <a href="#sec4">4. 学习资料推荐</a>
+</nav>
+
+<!-- ========== MAIN CONTENT ========== -->
+<main class="main">
+
+<!-- ====== COVER ====== -->
+<header class="cover" id="cover">
+  <p class="cover-suptitle">上海海关学院 · 2026 年暑期讲座</p>
+  <h1>AI 时代下的经济统计</h1>
+  <div class="cover-bar"></div>
+  <p class="cover-subtitle">从因果推断到智能体工作流 —— 低年级本科生如何应对研究范式的第三次转移</p>
+  <div class="cover-tags">
+    <span class="cover-tag">因果推断</span>
+    <span class="cover-tag">统计学基础</span>
+    <span class="cover-tag">Agentic AI</span>
+    <span class="cover-tag cover-tag--hl">研究范式转移</span>
+  </div>
+  <div class="author-info">
+    <p>张铭鑫</p>
+    <p>华南师范大学国际商学院</p>
+    <p>2026 年 7 月 9 日</p>
+    <p><a href="mailto:mingxinzhang@m.scnu.edu.cn">mingxinzhang@m.scnu.edu.cn</a></p>
+  </div>
+</header>
+
+<!-- ====== SECTION 1 ====== -->
+<section id="sec1">
+  <p class="sec-num">第一部分</p>
+  <h2 class="sec-title">经济统计的出发点与目的地</h2>
+  <div class="sec-bar"></div>
+  <div class="sec-lead">
+    目的地决定出行方式。很多人学了一学期统计学，却始终没想明白一个问题：我们到底为什么要学它？
+  </div>
+
+  <!-- 1.1 -->
+  <h3 class="h2-heading" id="s1-1">1.1 区分&ldquo;相关&rdquo;与&ldquo;因果&rdquo;</h3>
+
+  <h4 class="h3-heading">1.1.1 经济统计与统计学的差别</h4>
+
+  <p>经济统计和普通统计学的根本差别在哪里？一句话：<strong>经济统计的最终目标是因果推断</strong>。</p>
+
+  <p>普通统计学教你怎么描述数据——均值、方差、分布、相关性。这些东西当然有用，但经济学研究者最终要回答的问题几乎永远是&ldquo;为什么&rdquo;：</p>
+
+  <ul>
+    <li>最低工资提高了，就业率会不会下降？</li>
+    <li>扩大进口，本土企业的创新能力会不会提升？</li>
+    <li>减税政策，能不能刺激企业投资？</li>
+  </ul>
+
+  <p>这些问题不是在问&ldquo;两件事有没有关联&rdquo;，而是在问&ldquo;一件事的变动是否<strong>导致</strong>了另一件事的变动&rdquo;。</p>
+
+  <!-- 1.1.2 -->
+  <h4 class="h3-heading">1.1.2 案例：医院门口的健康调查</h4>
+
+  <p>假设我们在医院门口做一个调查：拦住 1000 个人，问了两个问题——</p>
+
+  <ol>
+    <li>最近一个月去过医院吗？</li>
+    <li>给自己的健康水平打个分（1–10 分）。</li>
+  </ol>
+
+  <p>数据跑出来，结果是这样的：</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>分组</th><th>人数</th><th class="td-center">健康自评均值</th><th class="td-center">标准差</th></tr>
+      <tr><td>去过医院</td><td class="td-center">300</td><td class="td-center">4.2</td><td class="td-center">2.1</td></tr>
+      <tr><td>没去过医院</td><td class="td-center">700</td><td class="td-center">7.8</td><td class="td-center">1.5</td></tr>
+    </table>
+  </div>
+
+  <p>差异非常显著（p &lt; 0.001）。一个简单粗暴的结论：<strong>去医院严重损害健康，平均降低约 3.6 分的健康评分</strong>。</p>
+
+  <p>这个结论对吗？当然不对。问题出在哪？</p>
+
+  <p><strong>去过医院的人本来就不健康</strong>。他们不是因为去了医院才不健康，而是因为不健康才去医院。直接比较两组人的健康水平，就相当于拿病人和健康人比——两组人在&ldquo;就医前&rdquo;的健康状态根本不可比。</p>
+
+  <p>这就是<strong>样本选择偏误</strong>。我们拿到的数据中，处理组（去过医院的）和控制组（没去医院的）从一开始就没有可比性。</p>
+
+  <div class="fig">
+    <img src="../1_plots/图1.png" alt="图1" loading="lazy">
+    <p class="fig-caption">图1：样本选择偏误示意图</p>
+  </div>
+
+  <!-- 1.1.3 -->
+  <h4 class="h3-heading">1.1.3 反事实分析框架</h4>
+
+  <p>要判断&ldquo;去医院是否导致健康水平下降&rdquo;，我们需要回答一个<strong>永远无法在现实中观察到的反事实问题</strong>：</p>
+
+  <blockquote>
+    <p>那些去过医院的人，如果他们没有去医院，健康水平会是多少？</p>
+  </blockquote>
+
+  <p>如果我们能同时观察到一个人&ldquo;去医院&rdquo;和&ldquo;没去医院&rdquo;两种状态下的健康水平，比较这两个值的差异，就能干净地分离出&ldquo;去医院&rdquo;的因果效应。但现实中，我们只能看到一种状态——这就是<strong>因果推断的根本难题</strong>。</p>
+
+  <p>反事实框架告诉我们：<strong>任何因果推断策略，本质上都是在构造一个可信的反事实对照组</strong>。</p>
+
+  <!-- 1.1.4 -->
+  <h4 class="h3-heading">1.1.4 相关性 ≠ 因果性：三个经典陷阱</h4>
+
+  <p>除了选择偏误，还有几个常见的混淆场景：</p>
+
+  <p><strong>混淆变量</strong>：冰淇淋销量和溺水死亡人数正相关。是因为冰淇淋导致溺水吗？不是，共同的原因是&ldquo;气温&rdquo;。夏天温度高，人们吃更多冰淇淋，也更多地游泳。</p>
+
+  <p><strong>反向因果</strong>：警察数量和犯罪率正相关。是因为警察导致犯罪吗？更可能是因为犯罪率高的地方派了更多警察。</p>
+
+  <p><strong>纯属巧合</strong>：有人统计了过去十年全国各省的星巴克门店数量与 985 高校数量，发现二者高度正相关（r &gt; 0.85）。是星巴克培养出了 985 学生吗？还是 985 毕业生都去开星巴克了？都不是。经济发展水平高的省份，星巴克门店多，985 高校也多——两者碰巧走出了相似的地理分布，但彼此之间没有任何因果联系。数据的巧合，仅此而已。</p>
+
+  <div class="callout callout--gold">
+    <strong>经验法则：如果你看到两个变量之间的相关性，在宣称&ldquo;因果关系&rdquo;之前，先问自己三个问题：</strong>
+    <ol style="margin-top:8px">
+      <li>有没有遗漏了共同原因？</li>
+      <li>方向会不会是反的？</li>
+      <li>这会不会只是偶然？</li>
+    </ol>
+  </div>
+
+  <!-- 1.2 -->
+  <h3 class="h2-heading" id="s1-2">1.2 剑指&ldquo;因果&rdquo;的研究设计</h3>
+
+  <p>既然直接比较不行，研究者又是怎么构造反事实对照组的？从理想世界到现实世界，有三种层次的方法。</p>
+
+  <div class="fig">
+    <img src="../1_plots/图2.png" alt="图2" loading="lazy">
+    <p class="fig-caption">图2：因果推断方法的三个层次</p>
+  </div>
+
+  <h4 class="h3-heading">1.2.1 理想：平行宇宙</h4>
+
+  <p>最理想的因果推断方法是什么？<strong>把同一个人复制两份</strong>，一份接受处理（比如去医院），一份不接受处理，然后比较两者的健康水平。</p>
+
+  <p>当然这不可能。但这个思想实验揭示了一个关键点：<strong>因果推断的黄金标准，是保证处理组和控制组在所有方面完全相同，除了是否接受处理这一点</strong>。</p>
+
+  <h4 class="h3-heading">1.2.2 实验室实验：随机分配</h4>
+
+  <p>退一步，虽然不能复制同一个人，但可以通过<strong>随机分配</strong>让两组人在统计意义上相同。</p>
+
+  <p>经济学中最经典的例子是<strong>田野实验</strong>。举个例子：我们要研究&ldquo;获得小额贷款对家庭收入的影响&rdquo;。在一批申请贷款的家庭中，随机抽取一半批准（处理组），一半不批准（控制组）。因为分配是随机的，这两组家庭在所有可观测和不可观测的特征上——教育、能力、动机、运气——都不存在系统性差异。</p>
+
+  <p>任何后续观察到的收入差异，就可以归因于贷款本身。</p>
+
+  <p>经济学实验当然比医学实验复杂得多。但逻辑是一致的：<strong>随机分配创造了可比的处理组和控制组</strong>。</p>
+
+  <h4 class="h3-heading">1.2.3 现实：三种准实验策略</h4>
+
+  <p>在真实研究中，我们很少有机会做随机实验。政策不是为研究者设计的，市场不会等人。于是，经济学家发展出了一整套<strong>准实验方法</strong>，目标都是在非随机数据中模拟随机实验的逻辑。</p>
+
+  <!-- IV -->
+  <p><strong>（1）工具变量法（IV）</strong></p>
+  <p><strong>核心思想</strong>：找一个只通过影响&ldquo;是否接受处理&rdquo;来影响结果的变量。</p>
+
+  <p><strong>经典案例</strong>：Angrist &amp; Krueger（1991）研究教育年限对收入的影响。他们使用了一个巧妙的工具变量——<strong>出生季度</strong>。逻辑很简单：美国的义务教育法规定，年满 16 岁才能退学，而入学的截止日期通常是 1 月 1 日。所以，出生在年初的人入学时年龄较大，更早达到 16 岁可以退学，因此受教育年限更少。</p>
+
+  <p>出生季度和教育年限相关（相关性条件满足），但出生季度和一个人的天赋或家庭背景几乎无关（外生性条件满足），出生季度除了通过影响教育年限，也不会有其他路径影响未来收入（排他性条件满足）。</p>
+
+  <p>实际上我们可以用更直观的例子来理解 IV：假设我们要研究&ldquo;参加补习班对考试成绩的影响&rdquo;。直接用补习班和考试成绩做回归会出问题——参加补习班的可能是成绩本来就不好的学生。但如果学校搞了一个随机实验：<strong>按身份证号码最后一位的奇偶性分配补习班名额</strong>。身份证号码尾数的奇偶显然和学生的天赋、家庭背景无关，但它决定了学生能否参加补习班。这就成了一个合格的 IV。</p>
+
+  <div class="card card--gold">
+    <p class="card-title">IV 需要满足三个条件：</p>
+    <ol>
+      <li><strong>相关性</strong>：工具变量必须和内生变量（处理变量）相关</li>
+      <li><strong>外生性</strong>：工具变量和误差项不相关（不能直接影响结果）</li>
+      <li><strong>排他性</strong>：工具变量只能通过影响处理变量来影响结果</li>
+    </ol>
+  </div>
+
+  <p><strong>配套检验方式</strong>：</p>
+  <ul>
+    <li><strong>外生性检验</strong>：工具变量是否和&ldquo;本应不受处理影响的变量的结果&rdquo;无关？比如，如果身份证尾数影响学生的性别比例或家庭收入均值，那就说明随机性有问题</li>
+    <li><strong>排他性检验</strong>：在控制处理变量后，工具变量对结果的影响是否消失了？</li>
+    <li><strong>弱工具变量检验</strong>：F 统计量是否大于 10？（如果工具变量和处理变量的相关性太弱，2SLS 估计量会有严重偏误）</li>
+  </ul>
+
+  <div class="fig">
+    <img src="../1_plots/图3.png" alt="图3" loading="lazy">
+    <p class="fig-caption">图3：工具变量法示意</p>
+  </div>
+
+  <!-- DID -->
+  <p><strong>（2）双重差分法（DID）</strong></p>
+  <p><strong>核心思想</strong>：比较处理组和控制组在政策前后的变化差异。</p>
+
+  <p><strong>经典设定</strong>：某个政策在某时点在一些地区实施，在另一些地区没有实施。我们手里有政策前后、各地区的数据。</p>
+
+  <p>DID 的关键假设是<strong>平行趋势</strong>：如果没有政策，处理组和控制组的结果变量会按照相同的趋势变化。我们无法直接验证这个假设（因为反事实不可观测），但可以检验政策之前的趋势是否平行。</p>
+
+  <p><strong>举个政策评估的例子</strong>：2013 年中国在部分城市试点碳排放权交易。我们想评估碳交易对企业创新的影响：</p>
+
+  <ul>
+    <li>处理组：试点城市的企业</li>
+    <li>控制组：非试点城市的企业</li>
+    <li>处理时间：2013 年政策实施</li>
+  </ul>
+
+  <p><strong>DID 模型</strong>：$$Y_{it} = \beta_0 + \beta_1 \cdot \text{Treat}_i + \beta_2 \cdot \text{Post}_t + \beta_3 \cdot (\text{Treat}_i \times \text{Post}_t) + \varepsilon_{it}$$</p>
+
+  <p>我们真正关心的是 $\beta_3$——交互项的系数。它捕捉了处理组在政策实施后&ldquo;多出来的变化&rdquo;，也就是政策的因果效应。</p>
+
+  <p><strong>配套检验方式</strong>：</p>
+  <ul>
+    <li><strong>平行趋势检验</strong>：画一张图，x 轴是年份，y 轴是结果变量，两条线分别代表处理组和控制组。在政策实施年份之前，两条线应当大致平行</li>
+    <li><strong>安慰剂检验</strong>：假设政策在真正实施之前就发生了，如果在虚拟的政策时间点检测不到效应，说明前面检测到的效应确实是政策带来的</li>
+    <li><strong>动态效应分析</strong>：不要在政策后只放一个 Post 变量，而是放政策后各年的虚拟变量，看效应如何随时间演变</li>
+  </ul>
+
+  <!-- RDD -->
+  <p><strong>（3）断点回归法（RDD）</strong></p>
+  <p><strong>核心思想</strong>：当处理状态在某一个临界值处发生跳跃时，临界值附近的人本质上是&ldquo;局部随机&rdquo;的。</p>
+
+  <p><strong>经典例子</strong>：美国国会议员选举。得票率在 50% 附近时，稍微多一点选票就当选，稍微少一点就落选。比较得票率 49.9% 和 50.1% 的候选人——这两个群体差异极小，唯一的显著区别是 50.1% 的人当选了。那么，比较这两组人所在选区的后续政策或经济发展，就能识别&ldquo;执政&rdquo;的因果效应。</p>
+
+  <p>另一个更贴近日常生活的例子：<strong>学校录取分数线</strong>。中考 598 分和 601 分的学生，能力几乎没有差别，但前者没被重点高中录取，后者被录取了。比较他们三年后的高考成绩，就能估计重点高中的因果效应。</p>
+
+  <p>RDD 的两个子类型：</p>
+  <ul>
+    <li><strong>精确断点（Sharp RDD）</strong>：临界值处，处理概率从 0 跳到 1</li>
+    <li><strong>模糊断点（Fuzzy RDD）</strong>：临界值处，处理概率跳跃但不完全从 0 到 1（比如，超过分数线的人不一定都去重点高中，有些会选择其他学校）</li>
+  </ul>
+
+  <p><strong>配套检验方式</strong>：</p>
+  <ul>
+    <li><strong>内生性检验</strong>：前定变量（如性别、年龄、家庭背景）在断点处不应有跳跃</li>
+    <li><strong>带宽敏感性</strong>：改变带宽后的系数是否稳定</li>
+    <li><strong>断点操纵检验</strong>：人们是否能够操纵落入断点哪一侧？（McCrary 检验——断点处的密度分布不应有跳跃）</li>
+  </ul>
+
+  <!-- 1.2.4 -->
+  <h4 class="h3-heading">1.2.4 三种方法速览</h4>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>方法</th><th>核心逻辑</th><th>典型场景</th><th>关键检验</th></tr>
+      <tr><td>IV</td><td>用外生变量替代内生处理</td><td>内生变量无法直接估计</td><td>弱工具变量、外生性、排他性</td></tr>
+      <tr><td>DID</td><td>比较时间 × 处理的差异</td><td>政策先后在不同地区推行</td><td>平行趋势、安慰剂</td></tr>
+      <tr><td>RDD</td><td>利用临界值附近的随机性</td><td>有明确资格线的制度</td><td>操纵检验、带宽敏感性</td></tr>
+    </table>
+  </div>
+
+  <p>这三种方法看似不同，但本质上在做同一件事：<strong>在非实验数据中构造一个有可比性的反事实对照组</strong>。</p>
+
+  <!-- 1.3 -->
+  <h3 class="h2-heading" id="s1-3">1.3 为什么我们需要统计学：系数估计</h3>
+
+  <h4 class="h3-heading">1.3.1 从总体到样本</h4>
+
+  <p>前面的讨论都在方法论层面：怎么设计研究才能干净地识别因果关系。但即便设计做到了最好，我们还面临一个现实问题：<strong>我们手里只有样本</strong>。</p>
+
+  <p>我们永远观察不到&ldquo;总体&rdquo;。全国有多少家企业？所有中国家庭的总收入是多少？企业供应链网络的&ldquo;真实&rdquo;中心性是多少？我们拥有的只是一部分样本数据，而我们想推断的是总体特征。</p>
+
+  <p>这带来了两个问题：</p>
+
+  <ol>
+    <li>用样本算出的估计值，和真实的总体参数之间差了多少？</li>
+    <li>要多少样本，估计值才能足够接近真实参数？</li>
+  </ol>
+
+  <h4 class="h3-heading">1.3.2 大数定律</h4>
+
+  <p>大数定律是统计学中最优美也最实用的定理之一。它的核心含义非常简单：</p>
+
+  <blockquote>
+    <p>当样本量趋于无穷大时，样本均值趋近于总体均值。</p>
+  </blockquote>
+
+  <p><strong>用更通俗的话说</strong>：<strong>样本越大，估计越准</strong>。</p>
+
+  <p><strong>打个比方</strong>：扔一次硬币，正面朝上的比例要么是 0 要么是 1——离 0.5 差得远。扔 10 次，大约 60% 的可能是 4–6 次正面。扔 100 次，几乎可以肯定正面比例在 0.4–0.6 之间。扔 10000 次，比例几乎就是 0.5。</p>
+
+  <div class="fig">
+    <img src="../1_plots/图4.png" alt="图4" loading="lazy">
+    <p class="fig-caption">图4：大数定律示意——随着样本量增加，样本均值收敛于总体均值</p>
+  </div>
+
+  <p><strong>大数定律给出的&ldquo;一致性&rdquo;保证是</strong>：样本量够大，你一定很准。但它没有告诉你收敛的<strong>速度</strong>——而这恰好是决定研究可行性的关键。</p>
+
+  <h4 class="h3-heading">1.3.3 从双重差分到系数估计</h4>
+
+  <p>回到我们前面的 DID 例子。模型是：</p>
+
+  <p>$$Y_{it} = \beta_0 + \beta_1 \cdot \text{Treat}_i + \beta_2 \cdot \text{Post}_t + \beta_3 \cdot (\text{Treat}_i \times \text{Post}_t) + \varepsilon_{it}$$</p>
+
+  <p>我们最关心的参数是 $\beta_3$，也就是交互项的系数。但如何从数据中得到 $\hat{\beta}_3$（带上帽子的希腊字母 beta，表示样本估计值）？最小二乘法（OLS）给出了一个公式。我们先来看一个更简单的情形，帮助建立直觉。</p>
+
+  <h4 class="h3-heading">1.3.4 简单线性回归中的系数估计</h4>
+
+  <p>考虑最简单的线性回归：</p>
+
+  <p>$$y_i = \beta_0 + \beta_1 \cdot x_i + \varepsilon_i$$</p>
+
+  <p>假设我们有 5 个人的数据，研究&ldquo;教育年限（x）对月收入（y，千元）的影响&rdquo;：</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>i</th><th>教育年限 x_i</th><th>月收入 y_i（千元）</th></tr>
+      <tr><td class="td-center">1</td><td class="td-center">12</td><td class="td-center">5</td></tr>
+      <tr><td class="td-center">2</td><td class="td-center">14</td><td class="td-center">7</td></tr>
+      <tr><td class="td-center">3</td><td class="td-center">16</td><td class="td-center">10</td></tr>
+      <tr><td class="td-center">4</td><td class="td-center">18</td><td class="td-center">12</td></tr>
+      <tr><td class="td-center">5</td><td class="td-center">20</td><td class="td-center">16</td></tr>
+    </table>
+  </div>
+
+  <p>OLS 的目标是找一条直线，使得所有点到这条线的垂直距离的平方和最小。也就是说，我们要最小化：</p>
+
+  <p>$$S(\beta_0, \beta_1) = \sum_{i=1}^{n} (y_i - \beta_0 - \beta_1 \cdot x_i)^2$$</p>
+
+  <p>对 $\beta_0$ 和 $\beta_1$ 分别求偏导并令其为零，经过推导，得到 $\beta_1$ 的估计量：</p>
+
+  <p>$$\hat{\beta}_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}$$</p>
+
+  <p>现在，把上面 5 个人的数据带入：</p>
+
+  <ul>
+    <li>x̄ = (12 + 14 + 16 + 18 + 20) / 5 = 16</li>
+    <li>ȳ = (5 + 7 + 10 + 12 + 16) / 5 = 10</li>
+  </ul>
+
+  <p>分子——x 和 y 的协方差和：</p>
+
+  <ul>
+    <li>i=1：(12−16)(5−10) = (−4)(−5) = 20</li>
+    <li>i=2：(14−16)(7−10) = (−2)(−3) = 6</li>
+    <li>i=3：(16−16)(10−10) = (0)(0) = 0</li>
+    <li>i=4：(18−16)(12−10) = (2)(2) = 4</li>
+    <li>i=5：(20−16)(16−10) = (4)(6) = 24</li>
+    <li><strong>分子 = 20 + 6 + 0 + 4 + 24 = 54</strong></li>
+  </ul>
+
+  <p>分母——x 的方差和：</p>
+
+  <ul>
+    <li>i=1：(12−16)² = 16</li>
+    <li>i=2：(14−16)² = 4</li>
+    <li>i=3：(16−16)² = 0</li>
+    <li>i=4：(18−16)² = 4</li>
+    <li>i=5：(20−16)² = 16</li>
+    <li><strong>分母 = 16 + 4 + 0 + 4 + 16 = 40</strong></li>
+  </ul>
+
+  <p>所以：</p>
+
+  <p>$$\hat{\beta}_1 = 54 / 40 = 1.35$$</p>
+
+  <p>再用 $\hat{\beta}_0$ = ȳ − $\hat{\beta}_1$·x̄ = 10 − 1.35 × 16 = −11.6，我们得到：</p>
+
+  <p>$$\hat{y}_i = -11.6 + 1.35 \cdot x_i$$</p>
+
+  <p>含义：<strong>每多受一年教育，月收入平均增加约 1350 元</strong>。</p>
+
+  <p>这个公式本身并不复杂，但研究 $\hat{\beta}_1$ 的统计性质才是统计学的精华所在。</p>
+
+  <h4 class="h3-heading">1.3.5 $\hat{\beta}_1$ 的统计性质</h4>
+
+  <p><strong>（1）无偏性</strong></p>
+
+  <p>在经典线性回归假设下（线性、严格外生性、无完全多重共线性、球形误差项），OLS 估计量 $\hat{\beta}_1$ 是 $\beta_1$ 的无偏估计。也就是说：</p>
+
+  <p>$$E[\hat{\beta}_1] = \beta_1$$</p>
+
+  <p>为什么？我们把 $y_i = \beta_0 + \beta_1 \cdot x_i + \varepsilon_i$ 代入 $\hat{\beta}_1$ 的公式：</p>
+
+  <p>$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2} = \frac{\sum (x_i - \bar{x})(\beta_0 + \beta_1 \cdot x_i + \varepsilon_i - \bar{y})}{\sum (x_i - \bar{x})^2}$$</p>
+
+  <p>经过整理，可以发现分子中 $\sum (x_i - \bar{x}) \cdot \bar{y} = \bar{y} \cdot \sum (x_i - \bar{x}) = 0$，$\sum (x_i - \bar{x}) \cdot \beta_0 = \beta_0 \cdot \sum (x_i - \bar{x}) = 0$。因此：</p>
+
+  <p>$$\begin{aligned}
+  \hat{\beta}_1 &= \frac{\sum (x_i - \bar{x})(\beta_1 \cdot x_i + \varepsilon_i)}{\sum (x_i - \bar{x})^2} \\
+                &= \beta_1 \cdot \frac{\sum (x_i - \bar{x}) \cdot x_i}{\sum (x_i - \bar{x})^2} + \frac{\sum (x_i - \bar{x}) \cdot \varepsilon_i}{\sum (x_i - \bar{x})^2} \\
+                &= \beta_1 + \frac{\sum (x_i - \bar{x}) \cdot \varepsilon_i}{\sum (x_i - \bar{x})^2}
+  \end{aligned}$$</p>
+
+  <p>两边取期望：</p>
+
+  <p>$$E[\hat{\beta}_1] = \beta_1 + \frac{\sum (x_i - \bar{x}) \cdot E(\varepsilon_i)}{\sum (x_i - \bar{x})^2}$$</p>
+
+  <p>在外生性假设下，$E(\varepsilon_i | x_i) = 0$，所以 $E(\varepsilon_i) = 0$。因此：</p>
+
+  <p>$$E[\hat{\beta}_1] = \beta_1$$</p>
+
+  <p>含义：如果你把同一个研究重复做 10000 遍，每次用不同的随机样本，10000 个 $\hat{\beta}_1$ 的平均值会等于真实的 $\beta_1$。</p>
+
+  <p><strong>（2）方差</strong></p>
+
+  <p>$\hat{\beta}_1$ 的方差衡量了&ldquo;这个估计量在不同样本之间有多大的波动&rdquo;。从 $\hat{\beta}_1 = \beta_1 + \frac{\sum (x_i - \bar{x}) \cdot \varepsilon_i}{\sum (x_i - \bar{x})^2}$ 出发：</p>
+
+  <p>$$\text{Var}(\hat{\beta}_1) = \text{Var}\left(\beta_1 + \frac{\sum (x_i - \bar{x}) \cdot \varepsilon_i}{\sum (x_i - \bar{x})^2}\right)$$</p>
+
+  <p>$\beta_1$ 是常数，方差为 0。在球形误差项假设下（同方差、无自相关），各 $\varepsilon_i$ 独立且方差均为 $\sigma^2$：</p>
+
+  <p>$$\begin{aligned}
+  \text{Var}(\hat{\beta}_1) &= \frac{\text{Var}\left(\sum (x_i - \bar{x}) \cdot \varepsilon_i\right)}{\left[\sum (x_i - \bar{x})^2\right]^2} \\
+                            &= \frac{\sum (x_i - \bar{x})^2 \cdot \text{Var}(\varepsilon_i)}{\left[\sum (x_i - \bar{x})^2\right]^2} \\
+                            &= \frac{\sigma^2 \cdot \sum (x_i - \bar{x})^2}{\left[\sum (x_i - \bar{x})^2\right]^2} \\
+                            &= \frac{\sigma^2}{\sum (x_i - \bar{x})^2}
+  \end{aligned}$$</p>
+
+  <div class="callout callout--navy">
+    <p>这个公式反映了两个关键信息：</p>
+    <ul style="margin-bottom:0">
+      <li>误差项方差 $\sigma^2$ 越大，$\hat{\beta}_1$ 的估计精度越低（数据噪声大，信号不清晰）</li>
+      <li>x 的总变异 $\sum (x_i - \bar{x})^2$ 越大，$\hat{\beta}_1$ 的估计精度越高（x 的变化范围越广，越容易识别它对 y 的影响）</li>
+    </ul>
+  </div>
+
+  <p>回到我们的例子：分母 $\sum (x_i - \bar{x})^2 = 40$。如果数据噪声 $\sigma^2 = 4$，那么 $\text{Var}(\hat{\beta}_1) = 4/40 = 0.1$，$\text{SE}(\hat{\beta}_1) = \sqrt{0.1} \approx 0.316$。这意味着 $\hat{\beta}_1 = 1.35$ 的标准误大约是 $0.316$——估计的 $1.35$ 大致在 $1.034$ 到 $1.666$ 之间波动。</p>
+
+  <p><strong>（3）一致性</strong></p>
+
+  <p>当样本量趋于无穷大时，$\hat{\beta}_1$ 依概率收敛于 $\beta_1$。这意味着你不需要无限重复研究——只要你手里的样本足够大，你的估计就能足够准。</p>
+
+  <p>从 $\text{Var}(\hat{\beta}_1) = \frac{\sigma^2}{\sum (x_i - \bar{x})^2}$ 可以看出：随着样本量 $n$ 增大，分母 $\sum (x_i - \bar{x})^2$ 持续增长，$\text{Var}(\hat{\beta}_1)$ 持续缩小，趋向于零。这正是大数定律在回归框架中的体现。</p>
+
+  <div class="callout callout--gold">
+    <p>这三个性质合在一起回答了&ldquo;为什么要学统计学&rdquo;这个核心问题：<strong>统计学给了我们一套语言和工具，让我们能够描述估计量的可靠性，而不只是给出一个数字了事</strong>。</p>
+  </div>
+
+  <div class="fig">
+    <img src="../1_plots/图5.png" alt="图5" loading="lazy">
+    <p class="fig-caption">图5：OLS 估计量的统计性质</p>
+  </div>
+
+  <!-- 1.4 -->
+  <h3 class="h2-heading" id="s1-4">1.4 为什么我们需要统计学：假设检验</h3>
+
+  <h4 class="h3-heading">1.4.1 假设检验的基本逻辑</h4>
+
+  <p>即便我们算出了 $\hat{\beta}_1$，还有一个问题没有解决：<strong>这个估计值是否显著不等于零？</strong></p>
+
+  <p>注意&ldquo;显著&rdquo;这个词的含义。如果 $\hat{\beta}_1$ = 0.001，它不等于零，但可能只是由于随机抽样误差造成的。假设检验帮助我们回答：<strong>观察到的效应，有多大可能只是噪音？</strong></p>
+
+  <p>假设检验的逻辑类似于法庭审判：</p>
+
+  <ul>
+    <li><strong>零假设 $H_0$</strong>：&ldquo;被告无罪&rdquo;（$\beta_1 = 0$，没有效应）</li>
+
+    <li><strong>备择假设 $H_1$</strong>：&ldquo;被告有罪&rdquo;（$\beta_1 \neq 0$，有效应）</li>
+
+    <li>我们的策略：先假设 $H_0$ 成立，然后看数据是否与这个假设严重矛盾</li>
+  </ul>
+
+  <h4 class="h3-heading">1.4.2 t 检验与 p 值</h4>
+
+  <p>双侧 t 检验的步骤：</p>
+
+  <ol>
+    <li>计算 t 统计量：$t = \hat{\beta}_1 / \text{SE}(\hat{\beta}_1)$
+      <ul>
+        <li>SE($\hat{\beta}_1$) 是 $\hat{\beta}_1$ 的标准误，反映了估计量的抽样变异程度</li>
+        <li>t 统计量 = 信号 / 噪音 = &ldquo;估计值相对于其标准误大了多少倍&rdquo;</li>
+      </ul>
+    </li>
+    <li>根据自由度（n − k，即样本量减去参数个数）查阅 t 分布表，确定 p 值
+      <ul>
+        <li>p 值 = 在 $H_0$ 成立的前提下，观察到当前估计值（或更极端值）的概率</li>
+      </ul>
+    </li>
+    <li>常用判断标准：
+      <ul>
+        <li>p &lt; 0.01 → 在 1% 水平上显著（***）</li>
+        <li>p &lt; 0.05 → 在 5% 水平上显著（**）</li>
+        <li>p &lt; 0.10 → 在 10% 水平上显著（*）</li>
+      </ul>
+    </li>
+  </ol>
+
+  <p>通俗理解：如果 $\hat{\beta}_1$ = 2.5，SE = 1.0，那么 t = 2.5。这个值意味着估计的效应是标准误的 2.5 倍——信号比噪音大得多。t 分布的 5% 临界值大约是 1.96，2.5 &gt; 1.96，所以我们有理由拒绝&ldquo;没有效应&rdquo;的零假设。</p>
+
+  <p>反过来，如果 $\hat{\beta}_1$ = 0.3，SE = 1.0，t = 0.3。0.3 远小于 1.96，p 值很大，我们无法拒绝零假设。不是说&ldquo;肯定没有效应&rdquo;，而是说&ldquo;现有数据没有提供足够强的证据证明有效应&rdquo;。</p>
+
+  <h4 class="h3-heading">1.4.3 互动练习：揪出伪造的显著性</h4>
+
+  <p>假设我们拿到一篇论文的回归结果，四个关键变量的系数和显著性标注如下：</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>变量</th><th>系数 $\hat{\beta}$</th><th>标准误 SE</th><th>标注</th></tr>
+      <tr><td>教育年限</td><td class="td-center">0.085</td><td class="td-center">0.091</td><td class="td-center">**</td></tr>
+      <tr><td>工作经验</td><td class="td-center">0.042</td><td class="td-center">0.015</td><td class="td-center">***</td></tr>
+      <tr><td>性别（女=1）</td><td class="td-center">-0.156</td><td class="td-center">0.082</td><td class="td-center">*</td></tr>
+      <tr><td>城市（一线=1）</td><td class="td-center">0.231</td><td class="td-center">0.052</td><td class="td-center">***</td></tr>
+    </table>
+  </div>
+
+  <p>论文作者声称：教育年限的回报率在 5% 水平上显著为正，工作经验在 1% 水平上显著为正，性别和城市效应也各自显著。</p>
+
+  <div class="exercise">
+    <p class="exercise-title">📋 你的任务</p>
+    <p style="margin-bottom:0">不要信任作者的标注。请逐行计算 t 统计量，自己动手验证每一个星号是否合理。（已知临界值：1% = 2.58，5% = 1.96，10% = 1.65）</p>
+  </div>
+
+  <p style="text-align:center;color:var(--text-light);margin:30px 0">—— 给学生 3 分钟计算时间 ——</p>
+
+  <p>现在让我们逐行核对：</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>变量</th><th class="td-center">系数 $\hat{\beta}$</th><th class="td-center">标准误 SE</th><th class="td-center">t 统计量</th><th class="td-center">|t| vs 临界值</th><th>论文标注</th><th>验证</th></tr>
+      <tr><td>教育年限</td><td class="td-center">0.085</td><td class="td-center">0.091</td><td class="td-center">0.934</td><td class="td-center">0.934 &lt; 1.65</td><td class="td-center"><span class="badge badge--red">**</span></td><td><span class="fail">✗ 伪造 — 连10%都不显著</span></td></tr>
+      <tr><td>工作经验</td><td class="td-center">0.042</td><td class="td-center">0.015</td><td class="td-center">2.800</td><td class="td-center">2.800 &gt; 2.58</td><td class="td-center"><span class="badge badge--green">***</span></td><td><span class="pass">✓ 正确 — 1%水平显著</span></td></tr>
+      <tr><td>性别（女=1）</td><td class="td-center">−0.156</td><td class="td-center">0.082</td><td class="td-center">1.902</td><td class="td-center">1.65 &lt; 1.902 &lt; 1.96</td><td class="td-center"><span class="badge badge--gold">*</span></td><td><span class="pass">✓ 正确 — 10%水平显著</span></td></tr>
+      <tr><td>城市（一线=1）</td><td class="td-center">0.231</td><td class="td-center">0.052</td><td class="td-center">4.442</td><td class="td-center">4.442 &gt; 2.58</td><td class="td-center"><span class="badge badge--green">***</span></td><td><span class="pass">✓ 正确 — 1%水平显著</span></td></tr>
+    </table>
+  </div>
+
+  <div class="callout callout--gold" style="margin-top:20px">
+    <p style="margin-bottom:0"><strong>结论：四个系数中，只有教育年限的显著性标注是伪造的——t 值不到 1，连 10% 的显著性门槛都够不着，却被标了两颗星。</strong></p>
+  </div>
+
+  <p>这个练习的目的不是让学生学会查表（反正以后都靠软件），而是让学生理解：<strong>显著性标注背后有一个清晰的数学逻辑链条，不应该被盲目接受</strong>。看到别人论文里的星星，不妨自己动手算一遍。</p>
+
+  <h4 class="h3-heading">1.4.4 统计显著性 ≠ 经济显著性</h4>
+
+  <p>这是最容易被混淆的概念。</p>
+
+  <div class="table-wrap">
+    <table class="cmp-table">
+      <tr><th></th><th>统计显著性</th><th>经济显著性</th></tr>
+      <tr><td>回答什么问题</td><td>效应是否<strong>存在</strong>？</td><td>效应是否<strong>重要</strong>？</td></tr>
+      <tr><td>决定因素</td><td>t 统计量（系数 / 标准误）</td><td>系数本身的大小</td></tr>
+      <tr><td>例子 1</td><td>教育年限每增加 1 年，收入增加 0.0001%，但 t = 10</td><td>存在效应，但规模微乎其微</td></tr>
+      <tr><td>例子 2</td><td>教育年限每增加 1 年，收入增加 50%，但 t = 0.5</td><td>效应巨大，但数据不足以确认</td></tr>
+    </table>
+  </div>
+
+  <p>大样本下，几乎一切系数都&ldquo;统计显著&rdquo;——因为标准误随着样本增大而趋近于零。这时候，真正需要关注的是<strong>系数本身的大小</strong>，而不是星标的数量。</p>
+
+  <blockquote>
+    <p>当样本量超过 100 万时，如果有人指着三个星号跟你强调&ldquo;这个效应是显著的&rdquo;，你可以礼貌地提醒他：在这个样本量下，连你晚上睡不好觉对第二天生产力的影响都是显著的。</p>
+  </blockquote>
+
+  <div class="fig">
+    <img src="../1_plots/图6.png" alt="图6" loading="lazy">
+    <p class="fig-caption">图6：统计显著性与经济显著性的区别</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 2 ====== -->
+<section id="sec2">
+  <p class="sec-num">第二部分</p>
+  <h2 class="sec-title">我们应该如何学习经济统计</h2>
+  <div class="sec-bar"></div>
+  <div class="sec-lead">
+    工具在变，学习的重心也应该变。过去十年间，经济统计的学习方式经历了三次范式转移。
+  </div>
+
+  <!-- 2.1 -->
+  <h3 class="h2-heading" id="s2-1">2.1 田园史诗时代（2018 年—2020 年）</h3>
+
+  <h4 class="h3-heading">2.1.1 什么样的一代研究者</h4>
+
+  <p>把时间拨回到 2019 年。彼时，ChatGPT 还没出现，Copilot 还在娘胎里。经济学专业的学生是这样学计量的：</p>
+
+  <ul>
+    <li>打开伍德里奇的《计量经济学导论》，从概率论到 OLS 到面板数据，一页一页啃</li>
+    <li>用 Stata 跑回归，手动敲 <code>reg y x, robust</code>，代码报错就去经管之家论坛翻帖子</li>
+    <li>追连享会的推文，学习 ivreg2、reghdfe、bacondecomp 的各种用法</li>
+    <li>安装 R 包需要先搞清楚 <code>install.packages</code> 和 <code>devtools::install_github</code> 的区别</li>
+    <li>画图先要记住 <code>ggplot2</code> 的语法，哪个图层对应哪个 <code>geom_</code></li>
+  </ul>
+
+  <p>知识的获取是<strong>线性</strong>的：你把基础学扎实，然后往上垒。搜索引擎是你的外脑，但搜索的结果好坏，取决于你用的关键词对不对——而不幸的是，很多时候你甚至不知道&ldquo;你该不知道什么&rdquo;。</p>
+
+  <h4 class="h3-heading">2.1.2 知识的价值与工具的壁垒</h4>
+
+  <p>在这个时代，知识本身就是最重要的资产。</p>
+
+  <p>两个研究者之间的差距，很大程度上取决于：</p>
+
+  <ul>
+    <li>谁知道更多的识别策略</li>
+    <li>谁掌握更熟练的编程技能</li>
+    <li>谁更了解哪个论坛里藏着有经验的师兄师姐</li>
+  </ul>
+
+  <p>这是一种有壁垒的知识经济。壁垒高，意味着进入成本大；但壁垒一旦被突破，护城河也很宽。</p>
+
+  <p><strong>学习规划的核心</strong>：掌握知识 + 掌握工具。学习路线是固定的：先学计量理论，再学 Stata/R，然后做实证练习。这条路没有捷径。</p>
+
+  <!-- 2.2 -->
+  <h3 class="h2-heading" id="s2-2">2.2 LLM 时代（2020 年—2025 年）</h3>
+
+  <h4 class="h3-heading">2.2.1 游戏规则的改变</h4>
+
+  <p>2022 年 11 月 30 日，ChatGPT 发布。这之后的两年，对经济学研究者的冲击不亚于一场地震。</p>
+
+  <p>LLM 改变了什么？</p>
+
+  <ul>
+    <li><strong>信息获取方式的根本性变革</strong>。以前你想知道&ldquo;R 语言中如何计算企业网络的度中心性&rdquo;，你需要：搜索 → 读文档 → 筛选 → 理解 → 尝试。现在：打字 → 回车 → 代码在眼前。</li>
+    <li><strong>知识本身的可替代性上升</strong>。以前记住 <code>igraph::degree()</code> 和 <code>igraph::betweenness()</code> 是一种稀缺能力。现在，连 <code>snap</code>、<code>networkx</code> 这些你根本没听说过的包，LLM 都能给你调用。</li>
+    <li><strong>信息差的缩小</strong>。不同研究者之间在&ldquo;知道什么&rdquo;上的差距在快速收窄。</li>
+  </ul>
+
+  <p>但 LLM 时代有个核心局限：<strong>LLM 只能提供信息，不能上手干活</strong>。它像一个全知全能但被困在屏幕里的同事——能告诉你答案，但不能替你操作电脑。</p>
+
+  <h4 class="h3-heading">2.2.2 新的学习规划</h4>
+
+  <p>Prompt Engineering 成了新的必修课。但请注意，好的 Prompt 并不是写一段漂亮的文字，而是：</p>
+
+  <ol>
+    <li><strong>清晰地定义任务的边界和目标</strong></li>
+    <li><strong>提供足够的上下文和约束条件</strong></li>
+    <li><strong>分步骤引导 LLM 进行推理</strong></li>
+  </ol>
+
+  <p>例如，同样是问&ldquo;帮我分析数据&rdquo;，差的 Prompt 和好的 Prompt 差异巨大：</p>
+
+  <div class="card card--navy">
+    <p style="margin-bottom:6px"><span class="badge badge--red">差</span> &ldquo;帮我分析一下这个数据&rdquo;</p>
+    <p style="margin-bottom:0"><span class="badge badge--green">好</span> &ldquo;我有一个 CSV 文件，代表中国上市公司 2010-2022 年的面板数据。核心变量包括：firm（企业代码）、year（年份）、revenue（营收）、profit（利润）。请帮我：1）筛选出连续存在至少 5 年的企业样本；2）对 profit/revenue 的缺失值用 winsorize 1% 处理；3）输出按年份的描述性统计表，包括均值、中位数、标准差&rdquo;</p>
+  </div>
+
+  <h4 class="h3-heading">2.2.3 时代的定位</h4>
+
+  <p>LLM 时代，会提问的人和不会提问的人之间的差距在拉大。但知识多少的价值在下降，工具熟练度的价值也在下降。</p>
+
+  <p>我把 LLM 时代称为<strong>最后的田园牧歌</strong>。为什么是&ldquo;最后&rdquo;？因为在这个时代，AI 工具再强大，也需要<strong>你自己动手</strong>——复制代码、调参数、排错、格式化输出。AI 是你的军师，但仗还是得你自己打。</p>
+
+  <p>当然，使唤学生是另一回事，但那不在我们的讨论范围内。</p>
+
+  <!-- 2.3 -->
+  <h3 class="h2-heading" id="s2-3">2.3 Agentic AI 时代（2025 年—）</h3>
+
+  <h4 class="h3-heading">2.3.1 什么是 Agentic AI</h4>
+
+  <p>先说一个简单的公式：</p>
+
+  <blockquote>
+    <p><strong>Agentic AI = Harness + LLM</strong></p>
+  </blockquote>
+
+  <p>把 LLM 想象成一台发动机——动力强劲，但如果没有方向盘、刹车和导航系统，再好的发动机也只能原地轰鸣。<strong>Harness</strong> 就是这套控制系统。</p>
+
+  <p>Harness 包括哪些东西？</p>
+
+  <ul>
+    <li><strong>SKILL</strong>：定义智能体在特定任务场景下的行为规范和工作流程。比如，&ldquo;当用户要求清洗数据时，你必须先预览数据、规划步骤、征得用户同意后才能生成代码&rdquo;</li>
+    <li><strong>Agents</strong>：定义子智能体的角色和职责。每个子智能体只负责一件特定的事</li>
+    <li><strong>Tools</strong>：智能体可以调用的外部工具——Python 脚本、API、文件系统操作</li>
+    <li><strong>约束规则</strong>：智能体必须遵循的行为边界——比如，不允许修改原始数据、不允许跳过用户确认环节</li>
+  </ul>
+
+  <p>在这个公式下，LLM 是引擎，Harness 是方向盘。两者结合，AI 从&ldquo;只能告诉你答案&rdquo;变成了&ldquo;能在你的环境中帮你干活&rdquo;。</p>
+
+  <div class="fig">
+    <img src="../1_plots/图7.png" alt="图7" loading="lazy">
+    <p class="fig-caption">图7：Agentic AI = Harness + LLM</p>
+  </div>
+
+  <h4 class="h3-heading">2.3.2 时代冲击</h4>
+
+  <p>Agentic AI 时代，研究流程正在被彻底重构。</p>
+
+  <p>你不再需要手动搜索文献——智能体帮你搜。你不再需要逐篇读 PDF 做笔记——智能体帮你生成知识卡片。你不再需要从零写代码——智能体帮你规划步骤、生成代码、审查代码、运行输出。</p>
+
+  <p>对老一代研究者（包括我在内）来说，这种变化让人焦虑——甚至是恐惧。我们花了无数时间积累的技能壁垒，在 AI 面前轰然倒塌。</p>
+
+  <p>但换个角度：<strong>工具壁垒的消解，正是新一代研究者的机会。</strong></p>
+
+  <h4 class="h3-heading">2.3.3 新的学习规划</h4>
+
+  <p>在 Agentic AI 时代，学习重心从&ldquo;知识记忆&rdquo;和&ldquo;工具操作&rdquo;转向<strong>设计与管理</strong>：</p>
+
+  <ol>
+    <li><strong>智能体基本知识</strong>
+      <ul>
+        <li>理解 SKILL 和 Agent 的概念</li>
+        <li>知道什么时候该写 SKILL，什么时候该定义新的 Agent</li>
+        <li>理解智能体之间的通信方式（文件传递、消息路由）</li>
+      </ul>
+    </li>
+    <li><strong>项目管理思维</strong>
+      <ul>
+        <li>数据的长期管理与版本控制</li>
+        <li>代码的模块化组织、复用与维护</li>
+        <li>项目文件夹的标准化结构</li>
+      </ul>
+    </li>
+    <li><strong>智能体设计模式</strong>
+      <ul>
+        <li><strong>HITL（Human-In-The-Loop）</strong>：在关键节点嵌入人类判断</li>
+        <li><strong>Reflection（反思）</strong>：让智能体审查自己的输出并自我改进</li>
+        <li><strong>Chain-of-Thought（思维链）</strong>：引导智能体分步推理</li>
+        <li><strong>Role-Playing（角色扮演）</strong>：让不同子智能体扮演不同角色协同工作</li>
+      </ul>
+    </li>
+    <li><strong>Harness Engineering</strong>：规范智能体行为
+      <ul>
+        <li>如何编写有效的约束规则</li>
+        <li>如何设计输出模板和风格指南</li>
+        <li>如何将研究者的品味和判断力编码进 Harness</li>
+      </ul>
+    </li>
+    <li><strong>检验输出结果</strong>
+      <ul>
+        <li>永远不要假设智能体的输出是正确的</li>
+        <li>交叉验证、边界测试、常识检验</li>
+        <li><strong>你对结果负责，不是你使用的智能体负责</strong></li>
+      </ul>
+    </li>
+  </ol>
+
+  <h4 class="h3-heading">2.3.4 人与 AI 关系的重构</h4>
+
+  <p>当 AI 可以胜任&ldquo;执行者&rdquo;的角色，人类的角色自然转向<strong>设计者</strong>和<strong>决策者</strong>。</p>
+
+  <p><strong>打个比方</strong>：十年前，能熟练操作 Stata 的研究者就像能烧一手好菜的厨师。现在，AI 扮演了自动炒菜机的角色——切菜、调味、翻炒它全能干。那厨师的价值在哪？在于<strong>设计菜单</strong>——决定今天做什么菜、用哪种食材、配什么样的味道。</p>
+
+  <p>每个人都在成为&ldquo;产品经理&rdquo;——不是你亲手写代码、跑回归、画图表，而是：</p>
+
+  <ol>
+    <li>定义问题（我要研究什么？）</li>
+    <li>设计流程（这个研究应该怎么推进？）</li>
+    <li>设定标准（什么样的输出算好？什么样的算不合格？）</li>
+    <li>做出判断（这个结果可信吗？背后有别的解释吗？）</li>
+  </ol>
+
+  <h4 class="h3-heading">2.3.5 三阶段对比</h4>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>维度</th><th>田园史诗</th><th>LLM 时代</th><th>Agentic AI 时代</th></tr>
+      <tr><td>知识价值</td><td>最高</td><td>下降</td><td>持续下降</td></tr>
+      <tr><td>工具壁垒</td><td>高</td><td>中</td><td>低</td></tr>
+      <tr><td>信息差</td><td>大</td><td>缩小</td><td>进一步缩小</td></tr>
+      <tr><td>核心竞争力</td><td>知识 + 技能</td><td>提问能力</td><td>设计 + 判断能力</td></tr>
+      <tr><td>人类角色</td><td>执行者</td><td>提问者 + 执行者</td><td>设计者 + 决策者</td></tr>
+      <tr><td>AI 角色</td><td>—</td><td>信息提供者</td><td>任务执行者</td></tr>
+      <tr><td>代表工具</td><td>Stata, R</td><td>ChatGPT, Claude</td><td>OpenCode, Cursor, Copilot</td></tr>
+    </table>
+  </div>
+
+  <div class="fig">
+    <img src="../1_plots/图8.png" alt="图8" loading="lazy">
+    <p class="fig-caption">图8：三个时代的对比</p>
+  </div>
+</section>
+
+<!-- ====== SECTION 3 ====== -->
+<section id="sec3">
+  <p class="sec-num">第三部分</p>
+  <h2 class="sec-title">Show me the code：智能体实战展示</h2>
+  <div class="sec-bar"></div>
+
+  <!-- 3.1 -->
+  <h3 class="h2-heading" id="s3-1">3.1 文献管理智能体</h3>
+
+  <blockquote>
+    <p>&ldquo;笨蛋会找到办法，聪明人会找到笨蛋在哪。&rdquo; —— Jony J《信仰》</p>
+  </blockquote>
+
+  <h4 class="h3-heading">3.1.1 它能做什么</h4>
+
+  <p>文献管理智能体是一个完整的实证研究辅助工具。它把一个研究者的文献工作拆成五个环节，每个环节由一个专门的子智能体负责：</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>环节</th><th>子智能体</th><th>输入</th><th>输出</th></tr>
+      <tr><td class="td-center">1</td><td>搜索文献</td><td>lit-search</td><td>关键词 + 期刊 + 年份</td><td>CSV 格式搜索结果</td></tr>
+      <tr><td class="td-center">2</td><td>整理文献</td><td>lit-organize</td><td>PDF 论文</td><td>Markdown 知识卡片</td></tr>
+      <tr><td class="td-center">3</td><td>分析文献</td><td>lit-analyze</td><td>搜索结果 + 知识卡片</td><td>HTML 分析报告</td></tr>
+      <tr><td class="td-center">4</td><td>推荐选题</td><td>lit-topic</td><td>分析报告</td><td>Markdown 选题报告</td></tr>
+      <tr><td class="td-center">5</td><td>评价选题</td><td>lit-evaluate</td><td>选题</td><td>Markdown 可行性评估</td></tr>
+    </table>
+  </div>
+
+  <p>五个环节串成一条完整的链：<code>关键词 → 搜索 → 整理 → 分析 → 选题 → 评价</code></p>
+
+  <div class="fig">
+    <img src="../1_plots/图9.jpg" alt="图9" loading="lazy">
+    <p class="fig-caption">图9：文献管理智能体工作流</p>
+  </div>
+
+  <h4 class="h3-heading">3.1.2 子智能体详解</h4>
+
+  <div class="card card--navy">
+    <p class="card-title">lit-search：文献搜索</p>
+    <p>使用 CrossRef REST API，不依赖爬虫，不依赖机构订阅。输入关键词后，自动拉取指定期刊、指定年份的所有相关文章。返回结果自带关联度评分（score），自动映射为 1-5 星标。</p>
+    <p style="margin-bottom:0">输出一份 CSV 文档 + 一条 Top 20 文献列表 + Top 5 摘要推送。</p>
+  </div>
+
+  <div class="card card--navy">
+    <p class="card-title">lit-organize：文献整理</p>
+    <p>读取 PDF，逐篇提取 8 个关键要素：研究问题、关键结论、理论框架、数据来源、识别策略、核心发现、机制检验、局限性。输出为 YAML Frontmatter + Markdown 格式的知识卡片，同时在已有知识卡片间建立双向引用关系。</p>
+  </div>
+
+  <div class="card card--navy">
+    <p class="card-title">lit-analyze：文献分析</p>
+    <p>整合搜索结果与知识卡片，从六个维度分析领域趋势：历年发表量与期刊结构、各年度最热主题、高产作者及其研究演进、矛盾观点与学术争议、研究空白、潜力方向推荐。输出为 HTML 格式的交互式报告。</p>
+  </div>
+
+  <div class="card card--navy">
+    <p class="card-title">lit-topic：推荐选题</p>
+    <p>基于分析报告中的矛盾观点和研究空白，用两种策略生成选题：策略 A——针对矛盾观点，提出可能调和双方的新理论；策略 B——针对研究空白，按&ldquo;理论 A + 方法 B + 情境 C&rdquo;的组合生成新选题。最终输出 3 个选题。</p>
+  </div>
+
+  <div class="card card--navy">
+    <p class="card-title">lit-evaluate：选题评价</p>
+    <p>从四个维度打分（每项满分 10 分）：新颖性、数据可行性、方法可行性、发表可能性。<strong>综合判断</strong>：建议推进 / 修改后推进 / 不建议。</p>
+  </div>
+
+  <h4 class="h3-heading">3.1.3 人类的智慧</h4>
+
+  <p>很多人看完这套流程后会困惑：文献搜索是 AI 做的、PDF 提炼是 AI 做的、趋势分析是 AI 做的、选题推荐也是 AI 做的——那我做什么？</p>
+
+  <p>答案是：<strong>你是那个做选择的人。</strong></p>
+
+  <p>文献管理智能体提供的只是<strong>地图</strong>——一张归纳了领域演进趋势、文献关联结构的地图。AI 的优势在于：不怕麻烦、没有偏好、不会忘记。所以它能用极低的成本和极快的速度，帮你梳理一个大领域的文献脉络。</p>
+
+  <p>但：</p>
+
+  <ul>
+    <li>看一千遍西安地图，尝不到一口擀面皮</li>
+    <li>读一百份分析报告，不如精读五篇关键论文</li>
+  </ul>
+
+  <div class="callout callout--gold">
+    <p style="margin-bottom:0"><strong>使用 AI 智能体，而不是被 AI 智能体使用。</strong>工具提供信息，判断依赖人类。这个判断力——读什么论文、信什么结论、做什么选题——恰恰是需要十年二十年阅读和思考才能练出来的东西，也是这个时代最不容易被替代的东西。</p>
+  </div>
+
+  <!-- 3.2 -->
+  <h3 class="h2-heading" id="s3-2">3.2 数据清洗智能体</h3>
+
+  <blockquote>
+    <p>&ldquo;Talk is cheap. Show me the code.&rdquo; —— Linus Torvalds</p>
+  </blockquote>
+
+  <h4 class="h3-heading">3.2.1 场景设定</h4>
+
+  <p>周六晚上 23:30，导师发来语音：</p>
+
+  <blockquote>
+    <p>&ldquo;小张，明天给我做份数据。算一下中国上市公司网络的度中心性和中介中心性，把财务指标都并进去。我感觉这次肯定能发《经济研究》，一定要快。收到请回复。&rdquo;</p>
+  </blockquote>
+
+  <div class="callout callout--navy">
+    <p style="margin-bottom:0">你的手指不受控制地打下：&ldquo;收到，谢谢老师。&rdquo;——但你心里清楚，你连度中心性是什么都不知道。这是数据清洗智能体诞生的场景原型。</p>
+  </div>
+
+  <h4 class="h3-heading">3.2.2 核心处理逻辑</h4>
+
+  <p>整个智能体的工作流程是一个 <strong>Human-In-The-Loop（HITL）</strong> 的 7 步循环：</p>
+
+  <ol>
+    <li><strong>用户输入</strong>：以自然语言描述数据处理任务</li>
+    <li><strong>智能体规划</strong>：调用 SKILL，理解任务、规划步骤、向用户展示方案</li>
+    <li><strong>用户确认</strong>：用户审核方案，可以修改任何步骤</li>
+    <li><strong>生成代码</strong>：智能体生成 R 语言代码初稿</li>
+    <li><strong>代码审查</strong>：唤醒 code-reviewer 子智能体，审查代码质量</li>
+    <li><strong>修正代码</strong>：智能体根据审查意见修正 Error 和 Warning</li>
+    <li><strong>运行输出</strong>：执行修正后的代码，生成数据结果</li>
+  </ol>
+
+  <div class="fig">
+    <img src="../1_plots/图10.png" alt="图10" loading="lazy">
+    <p class="fig-caption">图10：数据清洗智能体的 HITL 工作流</p>
+  </div>
+
+  <h4 class="h3-heading">3.2.3 SKILL 设计要点</h4>
+
+  <p><strong>8 步工作流</strong>：</p>
+
+  <pre>确认关键信息 → 预览原始数据 → 规划处理方案 → 创建任务结构
+→ 编写清洗脚本 → 编写 master 文档 → 脚本代码审查 → 代码修改与结果输出</pre>
+
+  <p><strong>场景自适应</strong>：新建任务时严格执行全部 8 步；追加处理时自动感知既有文件结构，仅执行必要步骤。</p>
+
+  <p><strong>资产文件（assets）</strong>：三个文件决定了代码的输出质量——<code>code_style.md</code>（R 语言代码风格规范）、<code>code_clean_template.R</code>（单表清洗模板）、<code>code_master_template.R</code>（合并主代码模板）。</p>
+
+  <p>将清洗（clean）和整合（master）分离，是数据处理项目管理的关键设计。好处在于：如果要修改某个变量的清洗逻辑，只需要改对应的 clean 脚本，不需要动 master 脚本。如果新增一个变量，只需要新增一个 clean 脚本，再在 master 中加一行读取命令即可。</p>
+
+  <h4 class="h3-heading">3.2.4 code-reviewer：代码的自我纠错</h4>
+
+  <p>code-reviewer 是一个独立的子智能体，角色设定为：<strong>一个掌握 R 语言、精通数据处理、熟悉 tidyverse 语法、且以严格著称的代码审查者</strong>。</p>
+
+  <p>它从五个维度审查代码：文件路径是否正确、是否严格执行了用户的数据处理意图、代码能否正确运行、是否遵循 <code>code_style.md</code> 的规范、是否遵循模板约定的格式。</p>
+
+  <p><strong>反馈分三级</strong>：<strong>Error</strong>（影响代码正确性，必须修正）、<strong>Warning</strong>（影响代码质量，建议修正）、<strong>Correct</strong>（代码正确，无需修改）。</p>
+
+  <p>这是 <strong>Reflection 模式</strong>的具体实现：智能体先写出代码，再由专门的子智能体去审查，确保代码质量。在实际测试中，引入 code-reviewer 后，代码的错误率下降约 60%。</p>
+
+  <h4 class="h3-heading">3.2.5 实用案例：计算企业网络中心性</h4>
+
+  <p>以 3.2.1 中小张面临的任务为例，用户只需用自然语言描述需求，智能体便完成：确认项目信息 → 预览数据 → 展示处理计划 → 生成并审查代码 → 输出结果。整个过程的 Token 成本约为 1.0–1.75 元人民币。</p>
+
+  <p>实际测试中，智能体生成的代码质量相当高——它在 <code>master.R</code> 中构造了一个匿名函数，使用 <code>igraph</code> 包的分组迭代语法（<code>map_dfr</code>）逐年计算网络指标，代码结构清晰，注释完整。即使是熟练的 R 用户，要手写出同等质量的代码也需要 20–30 分钟。</p>
+
+  <h4 class="h3-heading">3.2.6 时代反思</h4>
+
+  <blockquote>
+    <p>2019 年的时候，我花了半年时间钻研 R 语言。此后，靠着帮各色各样的人处理各色各样的数据赚生活费。对于精通 R 这件事，我总有一种从不说出口的骄傲：这个世界上真正懂得数据处理艺术的人那么少，而我就是其中一个。但当智能体在 1 分钟内生成出不比我 30 分钟手写差的代码时，我的骄傲被狠狠扇了一巴掌。</p>
+  </blockquote>
+
+  <p>AI 智能体在数据处理上有四个我们很难超越的优势：</p>
+
+  <ol>
+    <li><strong>没有情绪</strong>——不会因为调不通 Bug 而烦躁</li>
+    <li><strong>无限耐心</strong>——真的能给你每一步代码加注释</li>
+    <li><strong>庞大知识库</strong>——能发现和调用你听都没听过的包和函数</li>
+    <li><strong>成本低廉</strong>——整套流程跑下来的费用，还没有早上哄自己上班的那杯瑞幸贵</li>
+  </ol>
+
+  <p>最重要的：<strong>几乎不需要前期投入</strong>。只要你掌握自然语言，用合适的工具就能越过学习曲线。</p>
+
+  <p>但这不意味着我们应当放弃学习，而是意味着<strong>学习的重心需要转移</strong>——从&ldquo;学语言&rdquo;转向&ldquo;学设计&rdquo;：</p>
+
+  <ul>
+    <li>完善风格文档，提升智能体的代码品味</li>
+    <li>完善输出模板，提高代码准确性与可读性</li>
+    <li>完善项目管理逻辑，增强项目的可维护性与可拓展性</li>
+    <li>针对特定需求开发专用智能体</li>
+  </ul>
+
+  <blockquote>
+    <p>与其被时代的车轮碾在脸上，不如卯着劲跳上车去，看看这股风能吹多远。</p>
+  </blockquote>
+</section>
+
+<!-- ====== SECTION 4 ====== -->
+<section id="sec4">
+  <p class="sec-num">第四部分</p>
+  <h2 class="sec-title">学习资料推荐</h2>
+  <div class="sec-bar"></div>
+
+  <h3 class="h3-heading">4.1 系统入门</h3>
+
+  <div class="res-card">
+    <h4>《经济金融智能体设计》</h4>
+    <p>作者：李学恒、林建浩、严翊歆、张一帆（中山大学岭南学院）</p>
+    <p><strong>内容覆盖</strong>：OpenCode 环境配置、SKILL 与 Agent 基础语法、21 种智能体设计模式、实证经济学研究流程改造</p>
+    <p>适合：希望系统掌握 Agentic AI 在经济学研究中应用的学生和研究者</p>
+    <p><a href="https://ai.lingnan.top" target="_blank" rel="noopener">ai.lingnan.top</a></p>
+  </div>
+
+  <h3 class="h3-heading">4.2 实战跟进</h3>
+
+  <div class="res-card">
+    <h4>公众号：张同学的 AI 进阶之路</h4>
+    <p>内容：文献管理智能体、数据清洗智能体、选题评估智能体等实战案例的详细拆解</p>
+    <p>适合：已有基础概念，希望了解具体应用场景和实现细节的读者</p>
+  </div>
+
+  <h3 class="h3-heading">4.3 配套资源</h3>
+
+  <div class="fig">
+    <img src="../1_plots/图11.jpg" alt="图11" loading="lazy">
+    <p class="fig-caption">图11：配套资源</p>
+  </div>
+
+  <div class="res-card">
+    <h4>文献管理智能体</h4>
+    <p>GitHub 仓库：<a href="https://github.com/mingxin-zhang/lit-manager-agent" target="_blank" rel="noopener">github.com/mingxin-zhang/lit-manager-agent</a></p>
+  </div>
+
+  <div class="res-card">
+    <h4>数据清洗智能体</h4>
+    <p>GitHub 仓库：<a href="https://github.com/mingxin-zhang/data-tidyer-agent" target="_blank" rel="noopener">github.com/mingxin-zhang/data-tidyer-agent</a></p>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer">
+  <p>欢迎关注 &nbsp;·&nbsp; 上海海关学院 2026 年暑期讲座</p>
+</footer>
+
+</main>
+
+<!-- ====== TOC Scroll Spy ====== -->
+<script>
+(function(){
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = [];
+  tocLinks.forEach(a => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if(el) sections.push({el, a});
+  });
+
+  function update(){
+    let current = sections[0];
+    for(const s of sections){
+      if(s.el.getBoundingClientRect().top <= 120) current = s;
+    }
+    tocLinks.forEach(a => a.classList.remove('active'));
+    if(current) current.a.classList.add('active');
+  }
+
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>
